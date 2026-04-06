@@ -57,9 +57,7 @@ func isFragmentStatusPath(path string) bool {
 	if mid == "" {
 		return false
 	}
-	if strings.HasPrefix(mid, "-") {
-		mid = mid[1:]
-	}
+	mid = strings.TrimPrefix(mid, "-")
 	if mid == "" {
 		return false
 	}
@@ -310,11 +308,12 @@ func extractContentRecursive(items []any, defaultType string) ([]ContentPart, bo
 					}
 					typeName, _ := x["type"].(string)
 					typeName = strings.ToUpper(typeName)
-					if typeName == "THINK" || typeName == "THINKING" {
+					switch typeName {
+					case "THINK", "THINKING":
 						parts = append(parts, ContentPart{Text: ct, Type: "thinking"})
-					} else if typeName == "RESPONSE" {
+					case "RESPONSE":
 						parts = append(parts, ContentPart{Text: ct, Type: "text"})
-					} else {
+					default:
 						parts = append(parts, ContentPart{Text: ct, Type: partType})
 					}
 				case string:

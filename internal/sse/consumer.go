@@ -24,7 +24,7 @@ type CollectResult struct {
 // The caller is responsible for closing resp.Body unless closeBody is true.
 func CollectStream(resp *http.Response, thinkingEnabled bool, closeBody bool) CollectResult {
 	if closeBody {
-		defer resp.Body.Close()
+		defer func() { _ = resp.Body.Close() }()
 	}
 	text := strings.Builder{}
 	thinking := strings.Builder{}

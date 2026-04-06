@@ -130,9 +130,7 @@ func TestMarkTokenInvalidNotConfigToken(t *testing.T) {
 	a := &RequestAuth{UseConfigToken: false, DeepSeekToken: "direct", resolver: r}
 	r.MarkTokenInvalid(a)
 	// Should not panic, token should be unchanged for non-config
-	if a.DeepSeekToken != "" {
-		// Actually it does clear it; that's fine - let's check behavior
-	}
+	_ = a.DeepSeekToken // Actual behavior may clear it; this test only asserts no panic.
 }
 
 func TestMarkTokenInvalidEmptyAccountID(t *testing.T) {

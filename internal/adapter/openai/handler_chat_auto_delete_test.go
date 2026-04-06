@@ -107,7 +107,7 @@ type autoDeleteCtxDSStub struct {
 }
 
 func (m *autoDeleteCtxDSStub) DeleteSessionForToken(ctx context.Context, token string, sessionID string) (*deepseek.DeleteSessionResult, error) {
-	return m.autoDeleteModeDSStub.DeleteSessionForTokenCtx(ctx, token, sessionID)
+	return m.DeleteSessionForTokenCtx(ctx, token, sessionID)
 }
 
 func (m *autoDeleteCtxDSStub) DeleteAllSessionsForToken(_ context.Context, _ string) error {

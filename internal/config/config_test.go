@@ -58,8 +58,7 @@ func TestLoadStorePreservesFileBackedTokensForRuntime(t *testing.T) {
 	if err != nil {
 		t.Fatalf("create temp config: %v", err)
 	}
-	defer tmp.Close()
-
+	defer func() { _ = tmp.Close() }()
 	if _, err := tmp.WriteString(`{
 		"accounts":[{"email":"u@example.com","password":"p","token":"persisted-token"}]
 	}`); err != nil {
@@ -355,7 +354,7 @@ func TestAccountTestStatusIsRuntimeOnlyAndNotPersisted(t *testing.T) {
 	if err != nil {
 		t.Fatalf("create temp config: %v", err)
 	}
-	defer tmp.Close()
+	defer func() { _ = tmp.Close() }()
 	if _, err := tmp.WriteString(`{
 		"accounts":[{"email":"u@example.com","password":"p","test_status":"ok"}]
 	}`); err != nil {

@@ -66,7 +66,7 @@ func (r *Runner) pruneOldRuns() error {
 		if err := os.RemoveAll(dirPath); err != nil {
 			errs = append(errs, fmt.Sprintf("remove %s: %v", name, err))
 		} else {
-			fmt.Fprintf(os.Stdout, "pruned old test run: %s\n", name)
+			_, _ = fmt.Fprintf(os.Stdout, "pruned old test run: %s\n", name)
 		}
 	}
 
@@ -82,7 +82,7 @@ func (r *Runner) runPreflight(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	defer f.Close()
+	defer func() { _ = f.Close() }()
 	for _, step := range steps {
 		if _, err := fmt.Fprintf(f, "\n$ %s\n", strings.Join(step, " ")); err != nil {
 			return err
@@ -218,7 +218,7 @@ func (r *Runner) ping(path string) error {
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 	if resp.StatusCode != http.StatusOK {
 		return fmt.Errorf("status=%d", resp.StatusCode)
 	}

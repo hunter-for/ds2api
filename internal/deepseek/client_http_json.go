@@ -49,7 +49,7 @@ func (c *Client) postJSONWithStatus(ctx context.Context, doer trans.Doer, url st
 			return nil, 0, err
 		}
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 	payloadBytes, err := readResponseBody(resp)
 	if err != nil {
 		return nil, resp.StatusCode, err
@@ -86,7 +86,7 @@ func (c *Client) getJSONWithStatus(ctx context.Context, doer trans.Doer, url str
 			return nil, 0, err
 		}
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 	payloadBytes, err := readResponseBody(resp)
 	if err != nil {
 		return nil, resp.StatusCode, err

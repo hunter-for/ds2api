@@ -165,7 +165,7 @@ func (h *Handler) testAccount(ctx context.Context, acc config.Account, model, me
 		return result
 	}
 	if resp.StatusCode != http.StatusOK {
-		defer resp.Body.Close()
+		defer func() { _ = resp.Body.Close() }()
 		result["message"] = fmt.Sprintf("请求失败: HTTP %d", resp.StatusCode)
 		return result
 	}
@@ -218,7 +218,7 @@ func (h *Handler) testAPI(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, http.StatusOK, map[string]any{"success": false, "error": err.Error()})
 		return
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 	body, _ := io.ReadAll(resp.Body)
 	if resp.StatusCode == http.StatusOK {
 		var parsed any

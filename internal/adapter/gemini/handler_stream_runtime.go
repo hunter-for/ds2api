@@ -12,8 +12,9 @@ import (
 	streamengine "ds2api/internal/stream"
 )
 
+//nolint:unused // retained for native Gemini stream handling path.
 func (h *Handler) handleStreamGenerateContent(w http.ResponseWriter, r *http.Request, resp *http.Response, model, finalPrompt string, thinkingEnabled, searchEnabled bool, toolNames []string) {
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 	if resp.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(resp.Body)
 		writeGeminiError(w, resp.StatusCode, strings.TrimSpace(string(body)))
@@ -49,6 +50,7 @@ func (h *Handler) handleStreamGenerateContent(w http.ResponseWriter, r *http.Req
 	})
 }
 
+//nolint:unused // retained for native Gemini stream handling path.
 type geminiStreamRuntime struct {
 	w        http.ResponseWriter
 	rc       *http.ResponseController
@@ -68,6 +70,7 @@ type geminiStreamRuntime struct {
 	outputTokens int
 }
 
+//nolint:unused // retained for native Gemini stream handling path.
 func newGeminiStreamRuntime(
 	w http.ResponseWriter,
 	rc *http.ResponseController,
@@ -93,6 +96,7 @@ func newGeminiStreamRuntime(
 	}
 }
 
+//nolint:unused // retained for native Gemini stream handling path.
 func (s *geminiStreamRuntime) sendChunk(payload map[string]any) {
 	b, _ := json.Marshal(payload)
 	_, _ = s.w.Write([]byte("data: "))
@@ -103,6 +107,7 @@ func (s *geminiStreamRuntime) sendChunk(payload map[string]any) {
 	}
 }
 
+//nolint:unused // retained for native Gemini stream handling path.
 func (s *geminiStreamRuntime) onParsed(parsed sse.LineResult) streamengine.ParsedDecision {
 	if !parsed.Parsed {
 		return streamengine.ParsedDecision{}
@@ -158,6 +163,7 @@ func (s *geminiStreamRuntime) onParsed(parsed sse.LineResult) streamengine.Parse
 	return streamengine.ParsedDecision{ContentSeen: contentSeen}
 }
 
+//nolint:unused // retained for native Gemini stream handling path.
 func (s *geminiStreamRuntime) finalize() {
 	finalThinking := s.thinking.String()
 	finalText := cleanVisibleOutput(s.text.String(), s.stripReferenceMarkers)

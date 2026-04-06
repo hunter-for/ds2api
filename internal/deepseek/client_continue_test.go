@@ -54,8 +54,7 @@ func TestCallContinuePropagatesPowHeaderToFallbackRequest(t *testing.T) {
 	if err != nil {
 		t.Fatalf("callContinue returned error: %v", err)
 	}
-	defer resp.Body.Close()
-
+	defer func() { _ = resp.Body.Close() }()
 	if seenPow != "pow-response-abc" {
 		t.Fatalf("continue request pow header=%q want=%q", seenPow, "pow-response-abc")
 	}
@@ -105,8 +104,7 @@ func TestCallCompletionAutoContinueThreadsPowHeader(t *testing.T) {
 	if err != nil {
 		t.Fatalf("CallCompletion returned error: %v", err)
 	}
-	defer resp.Body.Close()
-
+	defer func() { _ = resp.Body.Close() }()
 	out, err := io.ReadAll(resp.Body)
 	if err != nil {
 		t.Fatalf("read auto-continued body failed: %v", err)

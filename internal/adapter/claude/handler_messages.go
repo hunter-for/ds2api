@@ -64,7 +64,7 @@ func (h *Handler) proxyViaOpenAI(w http.ResponseWriter, r *http.Request, store C
 		rec := httptest.NewRecorder()
 		h.OpenAI.ChatCompletions(rec, proxyReq)
 		res := rec.Result()
-		defer res.Body.Close()
+		defer func() { _ = res.Body.Close() }()
 		body, _ := io.ReadAll(res.Body)
 		for k, vv := range res.Header {
 			for _, v := range vv {
@@ -94,7 +94,7 @@ func (h *Handler) proxyViaOpenAI(w http.ResponseWriter, r *http.Request, store C
 	rec := httptest.NewRecorder()
 	h.OpenAI.ChatCompletions(rec, proxyReq)
 	res := rec.Result()
-	defer res.Body.Close()
+	defer func() { _ = res.Body.Close() }()
 	body, _ := io.ReadAll(res.Body)
 	if res.StatusCode < 200 || res.StatusCode >= 300 {
 		for k, vv := range res.Header {
@@ -124,7 +124,7 @@ func (h *Handler) proxyViaOpenAI(w http.ResponseWriter, r *http.Request, store C
 }
 
 func (h *Handler) handleClaudeStreamRealtime(w http.ResponseWriter, r *http.Request, resp *http.Response, model string, messages []any, thinkingEnabled, searchEnabled bool, toolNames []string) {
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 	if resp.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(resp.Body)
 		writeClaudeError(w, http.StatusInternalServerError, string(body))

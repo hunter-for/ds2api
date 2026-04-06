@@ -101,6 +101,7 @@ func buildClaudeToolPrompt(tools []any) string {
 		toolcall.BuildToolCallInstructions(names)
 }
 
+//nolint:unused // retained for compatibility with pending Claude tool-result prompt flow.
 func formatClaudeToolResultForPrompt(block map[string]any) string {
 	if block == nil {
 		return ""

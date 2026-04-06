@@ -7,7 +7,7 @@ func isLikelyJSONToolPayloadCandidate(candidate string) bool {
 	if trimmed == "" {
 		return false
 	}
-	if !(strings.HasPrefix(trimmed, "{") || strings.HasPrefix(trimmed, "[")) {
+	if !strings.HasPrefix(trimmed, "{") && !strings.HasPrefix(trimmed, "[") {
 		return false
 	}
 	lower := strings.ToLower(trimmed)

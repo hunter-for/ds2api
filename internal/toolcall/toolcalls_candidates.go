@@ -8,6 +8,8 @@ import (
 var toolCallPattern = regexp.MustCompile(`\{\s*["']tool_calls["']\s*:\s*\[(.*?)\]\s*\}`)
 var fencedJSONPattern = regexp.MustCompile("(?s)```(?:json)?\\s*(.*?)\\s*```")
 var fencedCodeBlockPattern = regexp.MustCompile("(?s)```[\\s\\S]*?```")
+
+//nolint:unused // retained for future markup tool-call heuristics.
 var markupToolSyntaxPattern = regexp.MustCompile(`(?i)<(?:(?:[a-z0-9_:-]+:)?(?:tool_call|function_call|invoke)\b|(?:[a-z0-9_:-]+:)?function_calls\b|(?:[a-z0-9_:-]+:)?tool_use\b)`)
 
 func buildToolCallCandidates(text string) []string {
@@ -190,6 +192,7 @@ func shouldSkipToolCallParsingForCodeFenceExample(text string) bool {
 	return !looksLikeToolCallSyntax(stripped)
 }
 
+//nolint:unused // retained for future markup tool-call heuristics.
 func looksLikeMarkupToolSyntax(text string) bool {
 	return markupToolSyntaxPattern.MatchString(text)
 }

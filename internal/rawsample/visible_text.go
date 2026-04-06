@@ -5,6 +5,7 @@ import (
 	"strings"
 )
 
+//nolint:unused // retained for raw-sample processing entrypoints.
 func extractProcessedVisibleText(raw []byte, kind, contentType string) string {
 	if len(raw) == 0 {
 		return ""
@@ -22,6 +23,7 @@ func extractProcessedVisibleText(raw []byte, kind, contentType string) string {
 	return parseOpenAIStreamText(string(raw))
 }
 
+//nolint:unused // retained for raw-sample processing entrypoints.
 func parseOpenAIStreamText(raw string) string {
 	if strings.TrimSpace(raw) == "" {
 		return ""
@@ -54,6 +56,7 @@ func parseOpenAIStreamText(raw string) string {
 	return out.String()
 }
 
+//nolint:unused // retained for raw-sample processing entrypoints.
 func parseOpenAIJSONText(raw string) string {
 	if strings.TrimSpace(raw) == "" {
 		return ""
@@ -65,6 +68,7 @@ func parseOpenAIJSONText(raw string) string {
 	return extractOpenAIVisibleTextValue(decoded)
 }
 
+//nolint:unused // retained for raw-sample processing entrypoints.
 func extractOpenAIVisibleTextValue(v any) string {
 	switch x := v.(type) {
 	case nil:

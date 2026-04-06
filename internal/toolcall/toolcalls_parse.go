@@ -164,6 +164,7 @@ func filterToolCallsDetailed(parsed []ParsedToolCall, availableToolNames []strin
 	return out, nil
 }
 
+//nolint:unused // retained for policy-level tool-name matching compatibility.
 func resolveAllowedToolName(name string, allowed map[string]struct{}, allowedCanonical map[string]string) string {
 	return resolveAllowedToolNameWithLooseMatch(name, allowed, allowedCanonical)
 }

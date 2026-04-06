@@ -3,6 +3,7 @@ package sse
 import (
 	"bufio"
 	"encoding/json"
+	"errors"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -32,7 +33,10 @@ func TestRawStreamSamplesTokenReplay(t *testing.T) {
 			if err != nil {
 				t.Fatalf("read sample: %v", err)
 			}
-			parsedTokens, expectedTokens := replayAndCollectTokens(string(raw))
+			parsedTokens, expectedTokens, err := replayAndCollectTokens(string(raw))
+			if err != nil {
+				t.Fatalf("replay token collection failed: %v", err)
+			}
 			if expectedTokens <= 0 {
 				t.Fatalf("expected positive token usage from raw stream, got %d", expectedTokens)
 			}
@@ -47,9 +51,10 @@ func TestRawStreamSamplesTokenReplay(t *testing.T) {
 	}
 }
 
-func replayAndCollectTokens(raw string) (parsedTokens int, expectedTokens int) {
+func replayAndCollectTokens(raw string) (parsedTokens int, expectedTokens int, err error) {
 	currentType := "thinking"
 	scanner := bufio.NewScanner(strings.NewReader(raw))
+	scanner.Buffer(make([]byte, 0, 64*1024), 2*1024*1024)
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
 		if !strings.HasPrefix(line, "data:") {
@@ -72,7 +77,13 @@ func replayAndCollectTokens(raw string) (parsedTokens int, expectedTokens int) {
 			parsedTokens = res.OutputTokens
 		}
 	}
-	return parsedTokens, expectedTokens
+	if scanErr := scanner.Err(); scanErr != nil {
+		if errors.Is(scanErr, bufio.ErrTooLong) {
+			return 0, 0, errors.New("raw stream line exceeds 2MiB scanner limit")
+		}
+		return 0, 0, scanErr
+	}
+	return parsedTokens, expectedTokens, nil
 }
 
 func rawAccumulatedTokenUsage(v any) int {

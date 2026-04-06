@@ -4,10 +4,13 @@ run:
   tests: true
 
 linters:
-  default: none
+  default: standard
   enable:
+    - errcheck
     - govet
     - ineffassign
+    - staticcheck
+    - unused
   settings:
     dupl:
       threshold: 100

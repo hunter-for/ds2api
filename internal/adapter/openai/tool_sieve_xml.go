@@ -8,6 +8,7 @@ import (
 
 // --- XML tool call support for the streaming sieve ---
 
+//nolint:unused // kept as explicit tag inventory for future XML sieve refinements.
 var xmlToolCallClosingTags = []string{"</tool_calls>", "</tool_call>", "</invoke>", "</function_call>", "</function_calls>", "</tool_use>",
 	// Agent-style XML tags (Roo Code, Cline, etc.)
 	"</attempt_completion>", "</ask_followup_question>", "</new_task>", "</result>"}
@@ -33,6 +34,8 @@ var xmlToolCallTagPairs = []struct{ open, close string }{
 }
 
 // xmlToolCallBlockPattern matches a complete XML tool call block (wrapper or standalone).
+//
+//nolint:unused // reserved for future fast-path XML block detection.
 var xmlToolCallBlockPattern = regexp.MustCompile(`(?is)(<tool_calls>\s*(?:.*?)\s*</tool_calls>|<tool_call>\s*(?:.*?)\s*</tool_call>|<invoke\b[^>]*>(?:.*?)</invoke>|<function_calls?\b[^>]*>(?:.*?)</function_calls?>|<tool_use>(?:.*?)</tool_use>|<attempt_completion>(?:.*?)</attempt_completion>|<ask_followup_question>(?:.*?)</ask_followup_question>|<new_task>(?:.*?)</new_task>)`)
 
 // xmlToolTagsToDetect is the set of XML tag prefixes used by findToolSegmentStart.
