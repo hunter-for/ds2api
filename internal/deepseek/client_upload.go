@@ -31,6 +31,7 @@ type UploadFileResult struct {
 	Bytes      int64
 	Status     string
 	Purpose    string
+	IsImage    bool
 	Raw        map[string]any
 	RawHeaders http.Header
 }
@@ -118,6 +119,9 @@ func (c *Client) UploadFile(ctx context.Context, a *auth.RequestAuth, req Upload
 			}
 			if result.ID == "" {
 				return nil, errors.New("upload file succeeded without file id")
+			}
+			if err := c.waitForUploadedFile(ctx, a, result); err != nil {
+				return nil, err
 			}
 			return result, nil
 		}
@@ -224,6 +228,9 @@ func extractUploadFileResult(resp map[string]any) *UploadFileResult {
 				result.Status = status
 			}
 		}
+		if !result.IsImage {
+			result.IsImage = firstBool(m, "is_image", "isImage")
+		}
 		if result.Purpose == "" {
 			result.Purpose = firstNonEmptyString(m, "purpose")
 		}
@@ -232,6 +239,21 @@ func extractUploadFileResult(resp map[string]any) *UploadFileResult {
 		}
 	}
 	return result
+}
+
+func firstBool(m map[string]any, keys ...string) bool {
+	for _, key := range keys {
+		switch v := m[key].(type) {
+		case bool:
+			return v
+		case string:
+			switch strings.ToLower(strings.TrimSpace(v)) {
+			case "true", "1", "yes", "y":
+				return true
+			}
+		}
+	}
+	return false
 }
 
 func firstNonEmptyString(m map[string]any, keys ...string) string {
