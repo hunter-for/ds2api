@@ -15,6 +15,7 @@ const (
 	defaultHost    = "0.0.0.0"
 	appName        = "ds2api"
 	appVersion     = "dev"
+	defaultDSPort  = 2302 // DayZ default game port
 )
 
 // Config holds the application configuration loaded from environment variables.
@@ -62,10 +63,10 @@ func main() {
 // loadConfig reads configuration from environment variables with sensible defaults.
 func loadConfig() (*Config, error) {
 	cfg := &Config{
-		Host: getEnv("API_HOST", defaultHost),
-		Port: defaultPort,
+		Host:      getEnv("API_HOST", defaultHost),
+		Port:      defaultPort,
 		DSAddress: getEnv("DS_ADDRESS", "localhost"),
-		DSPort:    2302,
+		DSPort:    defaultDSPort,
 		APIKey:    getEnv("API_KEY", ""),
 		Debug:     getEnvBool("DEBUG", false),
 	}
