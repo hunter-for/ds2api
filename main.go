@@ -63,7 +63,8 @@ func main() {
 // loadConfig reads configuration from environment variables with sensible defaults.
 func loadConfig() (*Config, error) {
 	cfg := &Config{
-		Host:      getEnv("API_HOST", defaultHost),
+		// Bind to localhost only by default - safer for personal/local use
+		Host:      getEnv("API_HOST", "127.0.0.1"),
 		Port:      defaultPort,
 		DSAddress: getEnv("DS_ADDRESS", "localhost"),
 		DSPort:    defaultDSPort,
